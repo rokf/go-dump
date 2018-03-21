@@ -11,7 +11,7 @@ func main() {
 	vm.Init()
 	vm.PushINT(1)
 	vm.PushINT(2)
-	vm.PushINT(3)
+	vm.PushPAIR()
 
 	vm.GC()
 	if vm.Allocated != 3 {

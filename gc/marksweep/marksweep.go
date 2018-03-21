@@ -45,8 +45,8 @@ func (vm *VM) Pop() *Object {
 	if vm.StackSize <= 0 {
 		panic("Underflow!")
 	}
-	obj := vm.Stack[vm.StackSize]
 	vm.StackSize--
+	obj := vm.Stack[vm.StackSize]
 	return obj
 }
 
@@ -119,10 +119,10 @@ func (vm *VM) PushINT(value int) {
 
 func (vm *VM) PushPAIR() {
 	obj := vm.NewObject(PAIR)
-	head := vm.Pop()
-	tail := vm.Pop()
-	obj.Head = head
-	obj.Tail = tail
+	h := vm.Pop()
+	t := vm.Pop()
+	obj.Head = h
+	obj.Tail = t
 
 	vm.Push(obj)
 }
