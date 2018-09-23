@@ -98,7 +98,7 @@ func drawSelectedEntry(s tcell.Screen) {
 		return
 	}
 	w, _ := s.Size()
-	s.SetContent(w-1, selectedEntry+1, '←', nil, tcell.StyleDefault.Foreground(tcell.ColorDefault))
+	s.SetContent(w-1, selectedEntry+1, '*', nil, tcell.StyleDefault.Foreground(tcell.ColorDefault))
 }
 
 func drawData(s tcell.Screen) {
@@ -161,6 +161,9 @@ func handleKeyEvent(ev *tcell.EventKey) {
 		}
 
 		messageData := commandParser.FindStringSubmatch(string(msg))
+		if len(messageData) != 5 {
+			break
+		}
 		year, err := strconv.Atoi(messageData[1])
 		month, err := strconv.Atoi(messageData[2])
 		day, err := strconv.Atoi(messageData[3])
@@ -179,5 +182,13 @@ func handleKeyEvent(ev *tcell.EventKey) {
 		}
 
 		msg = msg[:0]
+	case tcell.KeyCtrlE:
+		if len(msg) != 0 || len(data) == 0 {
+			break
+		}
+		msg = []rune(fmt.Sprintf("%v %v", makeDateString(data[selectedEntry].Date), data[selectedEntry].Text))
+		db.Where("id = ?", data[selectedEntry].ID).Delete(entry{})
+		db.Order("date").Find(&data)
+		selectedEntry = 0
 	}
 }
